@@ -168,6 +168,8 @@ public:
   ///
   Eigen::VectorXd nu_passive;
 
+  double t;
+
   ///
   /// @brief Stack of the Lagrange multipliers w.r.t. the acceleration-level 
   /// contact constraints that is active at the current contact status. Size is 

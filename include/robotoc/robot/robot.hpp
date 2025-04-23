@@ -912,7 +912,9 @@ private:
   // Robot model info
   RobotModelInfo info_;
   // Pinocchio models and datas, and runtime variables
+protected:
   pinocchio::Model model_, impact_model_;
+private:
   pinocchio::Data data_, impact_data_;
   pinocchio::container::aligned_vector<pinocchio::Force> fjoint_;
   Eigen::MatrixXd dimpact_dv_; 

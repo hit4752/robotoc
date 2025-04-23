@@ -95,6 +95,13 @@ void OCPSolver::setSolverOptions(const SolverOptions& solver_options) {
 
 void OCPSolver::discretize(const double t) {
   time_discretization_.discretize(contact_sequence_, t);
+    // s_に時刻を詰める
+    int i = 0;
+    for (auto& e : s_) {
+        e.t = time_discretization_[i].t;
+        std::cerr << "s_(" << i << ").t = " << e.t << std::endl;
+        i++;
+    }
   if (solver_options_.discretization_method == DiscretizationMethod::PhaseBased) {
     time_discretization_.correctTimeSteps(contact_sequence_, t);
   }
