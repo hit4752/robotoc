@@ -32,6 +32,7 @@ bool JointTorquesLowerLimit::isFeasible(Robot& robot,
                                         const SplitSolution& s) const {
   for (int i=0; i<dimc_; ++i) {
     if (s.u.coeff(i) < umin_.coeff(i)) {
+      // std::cerr << "isFeasible: infieasible at i = " << i << std::endl;
       return false;
     }
   }
@@ -44,6 +45,7 @@ void JointTorquesLowerLimit::setSlack(Robot& robot,
                                       ConstraintComponentData& data, 
                                       const SplitSolution& s) const {
   data.slack = s.u - umin_;
+  // std::cerr << "setSlack: slack = " << data.slack(9) << std::endl;
 }
 
 
@@ -54,6 +56,7 @@ void JointTorquesLowerLimit::evalConstraint(Robot& robot,
   data.residual = umin_ - s.u + data.slack;
   computeComplementarySlackness(data);
   data.log_barrier = logBarrier(data.slack);
+  // std::cerr << "evalConstraint: residual = " << data.residual(9) << std::endl;
 }
 
 
@@ -62,6 +65,7 @@ void JointTorquesLowerLimit::evalDerivatives(
     ConstraintComponentData& data, const SplitSolution& s, 
     SplitKKTResidual& kkt_residual) const {
   kkt_residual.lu.noalias() -= data.dual;
+  // std::cerr << "evalDerivatives: dual = " << data.dual(9) << ", kkt_residual = " << kkt_residual.lu(9) << std::endl;
 }
 
 
@@ -72,6 +76,11 @@ void JointTorquesLowerLimit::condenseSlackAndDual(
       += data.dual.array() / data.slack.array();
   computeCondensingCoeffcient(data);
   kkt_residual.lu.noalias() -= data.cond;
+  // std::cerr << "condenseSlackAndDual: dual / slack = " << data.dual(9) / data.slack(9)
+  //           << ", Quu = " << kkt_matrix.Quu.diagonal().array()(9) 
+  //           << ", cond = " << data.cond(9)
+  //           << ", kkt_residual = " << kkt_residual.lu(9)
+  //           << std::endl;
 }
 
 
@@ -80,6 +89,10 @@ void JointTorquesLowerLimit::expandSlackAndDual(
     const SplitDirection& d) const {
   data.dslack = d.du - data.residual;
   computeDualDirection(data);
+  // std::cerr << "expandSlackAndDual: dslack = " << data.dslack(9) 
+  //           << ", du = " << d.du(9) 
+  //           << ", residual = " << data.residual(9)
+  //           << std::endl;
 }
 
 
